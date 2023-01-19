@@ -1,33 +1,37 @@
 export module hal.output;
 
 import <string>;
-import <SDL.h>;
+import <Windows.h>;
 import types;
 
-export namespace WindowControl {
-	class Window {
-	private:
-		std::string name;
-		Vector2 pos;
-		Vector2 size;
-		bool visibility;
+export namespace GDE {
+	export namespace WindowControl{
+		export class Window {
+		private:
+			std::string name;
+			DWORD exWinStyle;
+			DWORD winStyle;
+			Vector2 pos;
+			Vector2 size;
+			WNDCLASSEXW wc;
 
-		SDL_Window* hook;
-	public:
-		Window(const std::string, const Vector2, const Vector2, const bool);
+			HWND handle;
+		public:
+			Window(const std::string, const Vector2, const Vector2, WNDCLASSEXW, const HMODULE);
 
-		//void open();
-		//void close();
+			void show(const bool);
+			void update();
 
-		inline std::string getName() const { return name; };
-		inline Vector2 getPos() const { return pos; };
-		inline Vector2 getSize() const { return size; };
-		inline bool getVisibility() const { return visibility; };
-		inline SDL_Window* getHook() { return hook; };				//To be deleted eventually
+			~Window();
+		};
 
-		~Window();
-	};
+	}
 
-	export Window* create(const std::string, const Vector2, const Vector2, const bool);
-	export void destroy(Window*);
+	export namespace WindowClasses{
+		export WNDCLASSEXW gWC;
+		typedef LRESULT(*WinProcFunc)(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+		export void init(WNDCLASSEXW& const, const HMODULE);
+		bool initializeWindowClass(WNDCLASSEXW& const, const std::string, const unsigned int, const int, const int, const HINSTANCE, const HICON, const HICON, const HCURSOR, const HBRUSH, const std::string, const WinProcFunc);
+	}
 }
