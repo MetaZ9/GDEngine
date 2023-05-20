@@ -20,11 +20,12 @@ void Game::launch()
 }
 
 void Game::loop() {
-	MSG message;
-	while (GetMessage(&message, NULL, 0, 0) > 0)
-	{
-		TranslateMessage(&message);
-		DispatchMessage(&message);
+	bool result = true;
+
+	while (result) {
+		/*result = */ processInput();
+		updateData();
+		render();
 	}
 
 }
@@ -32,6 +33,15 @@ void Game::loop() {
 void Game::processInput()
 {
 	std::cout << "Input" << std::endl;
+	GDE::Input::getInput();
+/*
+	MSG message;
+	while (GetMessage(&message, NULL, 0, 0) > 0)
+	{
+		TranslateMessage(&message);
+		DispatchMessage(&message);
+	}
+*/
 }
 
 void Game::updateData()
@@ -42,6 +52,10 @@ void Game::updateData()
 void Game::render()
 {
 	std::cout << "Render" << std::endl;
+}
+
+void Game::close()
+{
 }
 
 Game::~Game()

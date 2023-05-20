@@ -15,6 +15,7 @@ private:
 public:
 	Game(const std::string, const HMODULE);
 	void launch();
+	void close();
 	~Game();
 
 private:
