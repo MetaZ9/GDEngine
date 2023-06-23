@@ -5,14 +5,14 @@ import <iostream>;
 import hal.input;
 
 Game::Game(const std::string _app_name, const HMODULE _instance)
-	:app_name(_app_name), instance(_instance)
+	:app_name(_app_name), processHandle(_instance)
 {
-	GDE::WindowClasses::init(GDE::WindowClasses::gWC, instance);
+	GDE::WindowClasses::init(GDE::WindowClasses::gWC, processHandle);
 }
 
 void Game::launch()
 {
-	app_window = new GDE::WindowControl::Window(app_name, Vector2(30, 30), Vector2(600, 400), GDE::WindowClasses::gWC, instance);
+	app_window = new GDE::WindowControl::Window(app_name, Vector2(30, 30), Vector2(600, 400), GDE::WindowClasses::gWC, processHandle);
 	app_window->show(true);
 	app_window->update();
 

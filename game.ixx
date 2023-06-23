@@ -10,7 +10,7 @@ private:
 	std::string app_name;
 	GDE::WindowControl::Window* app_window;
 
-	HMODULE instance;
+	HMODULE processHandle;
 
 public:
 	Game(const std::string, const HMODULE);
