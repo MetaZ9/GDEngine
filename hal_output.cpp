@@ -1,7 +1,9 @@
 #include <wtypes.h>
+#include <stdexcept>
 module hal.output;
 
 import <string>;
+import <iostream>;
 import types;
 
 namespace GDE {
@@ -45,7 +47,7 @@ namespace GDE {
 	namespace WindowClasses {
 		typedef LRESULT(*WinProcFunc)(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-		bool createWindowClass(const HMODULE _instance, const std::string _wnd_class_name, const WNDPROC _wnd_proc_msg) {
+		bool createWindowClass(const std::string _wnd_class_name, const WNDPROC _wnd_proc_msg, const HMODULE _instance) {
 			WNDCLASSEXW window_class = { 0 };
 
 			window_class.lpszClassName = std::wstring(_wnd_class_name.begin(), _wnd_class_name.end()).c_str();
@@ -55,48 +57,56 @@ namespace GDE {
 			return RegisterClassExW(&window_class);
 		}
 
-		HWND createWindow(const std::string _wnd_class_name, const std::string _wnd_name, const DWORD _wnd_ex_style, const DWORD _wnd_style, const Position _wnd_position, const Size _wnd_size, const HWND _wnd_parent, const HMENU _wnd_menu, const HINSTANCE _wnd_instance, const LPVOID _wnd_lpParam) {
-			HWND window_handle = CreateWindowExW(_wnd_ex_style, std::wstring(_wnd_class_name.begin(), _wnd_class_name.end()).c_str(), std::wstring(_wnd_name.begin(), _wnd_name.end()).c_str(), _wnd_style, _wnd_position.get<0>(), _wnd_position.get<1>(), _wnd_size.get<0>(), _wnd_size.get<1>(), _wnd_parent, _wnd_menu, _wnd_instance, _wnd_lpParam);
+		HWND createWindow(const std::string _wnd_name, const std::string _wnd_class_name, const DWORD _wnd_style, const DWORD _wnd_ex_style, const Position _wnd_position, const Size _wnd_size, const HWND _wnd_parent, const HMENU _wnd_menu, const HINSTANCE _wnd_instance, const LPVOID _wnd_lpParam /*voir ce que c'est*/) {
+			HWND window_handle = CreateWindowExW(_wnd_ex_style, std::wstring(_wnd_class_name.begin(), _wnd_class_name.end()).c_str(), std::wstring(_wnd_name.begin(), _wnd_name.end()).c_str(), _wnd_style, _wnd_position.get(0), _wnd_position.get(1), _wnd_size.get(0), _wnd_size.get(1), _wnd_parent, _wnd_menu, _wnd_instance, _wnd_lpParam);
+
 			if (window_handle == NULL)
-				return nullptr;					//-- ERROR
-
-			return window_handle;
+				throw std::exception("Couldn't create window handle");
+			else
+				return window_handle;
 		}
 
-		void createWindowClass(const std::string _className, const WinProcFunc _windowProcessMessage, const HMODULE _instance) {
-			WNDCLASSEXW window_class = { 0 };
-			const LPCWSTR window_class_name = std::wstring(_className.begin(), _className.end()).c_str();
-
-			window_class.lpszClassName = window_class_name;
-			window_class.lpfnWndProc = _windowProcessMessage;
-			window_class.hInstance = _instance;
-
-			RegisterClassExW(&window_class);
+		void safeStop() {
+			exit(EXIT_FAILURE);
 		}
 
-		HWND createWindow() {
-			return
+		bool quit = false;
+
+		LRESULT CALLBACK basicGameWindowProcFunc(HWND _wndHandle, UINT _message, WPARAM _wParam, LPARAM _lParam) {
+			switch (_message) {
+				case WM_QUIT:
+				case WM_DESTROY:
+					quit = true;
+
+					break;
+				default:
+					return DefWindowProc(_wndHandle, _message, _wParam, _lParam);
+
+					break;
+			}
+
+			return 0;
 		}
 
 		void init(WNDCLASSEXW& const wc, const HMODULE _instance) {
-			//-- Create Window Class
-			createWindowClass(className, wndProcFunc, _instance);
-			//WNDCLASSEXW window_class = { 0 };
-			//const wchar_t window_class_name[] = L"Main Game Window Class";
-
-			//window_class.lpszClassName = (LPCWSTR)window_class_name;
-			//window_class.lpfnWndProc = nullptr;//WindowProcessMessage;
-			//window_class.hInstance = _instance;
-
-			//RegisterClassExW(&window_class);
+			//-- Create Window Classes
+			//--- Basic Window Class
+			createWindowClass("className", basicGameWindowProcFunc, _instance);
 
 			//-- Create Window
-			HWND window_handle = CreateWindowExW(0L, (LPCWSTR)window_class_name, L"My game here", WS_OVERLAPPED, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, _instance, NULL);
-			if (window_handle == NULL)
-				return;					//-- ERROR here
+			HWND windowHandle = nullptr;
+
+			try {
+				windowHandle = createWindow("windowName", "className", WS_OVERLAPPED, 0L, Position(CW_USEDEFAULT, CW_USEDEFAULT), Size(CW_USEDEFAULT, CW_USEDEFAULT), NULL, NULL, _instance, NULL);
+			}
+			catch (std::exception& e) {
+				std::cerr << e.what() << std::endl;
+
+				safeStop();
+			}
 
 			//-- Show Window
-			ShowWindow(window_handle, 1);
+			ShowWindow(windowHandle, 1);
 
 			bool quit = false;
 			//-- Window Loop
@@ -111,42 +121,6 @@ namespace GDE {
 				//game stuff here
 			}
 
-			//Game Window Class
-			const bool isSuccess = initializeWindowClass(wc, "GameWindowClass", 0, 0, 0, _instance, nullptr, nullptr, nullptr, nullptr, "", [](HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) -> long long {
-					switch (msg)
-					{
-					case WM_CLOSE:
-						DestroyWindow(hwnd);
-						break;
-					case WM_DESTROY:
-						PostQuitMessage(0);
-						break;
-					default:
-						return DefWindowProc(hwnd, msg, wParam, lParam);
-					}
-
-					return 0;
-				});
-
-			if (!isSuccess)
-				"ono";
-		}
-
-		bool initializeWindowClass(WNDCLASSEXW& const wc, const std::string _name, const unsigned int _cstyle, const int _exClassData, const int _exWinData, const HINSTANCE _appInst, const HICON _lgIcon, const HICON _smIcon, const HCURSOR _cursor, const HBRUSH _bgBrush, const std::string _clMenu, const WinProcFunc _procFunc) {
-			wc.cbSize = sizeof(WNDCLASSEXW);
-			wc.style = _cstyle;
-			wc.lpfnWndProc = _procFunc;
-			wc.cbClsExtra = _exClassData;
-			wc.cbWndExtra = _exWinData;
-			wc.hInstance = _appInst;
-			wc.hIcon = _lgIcon;
-			wc.hCursor = _cursor;
-			wc.hbrBackground = _bgBrush;
-			wc.lpszMenuName = std::wstring(_clMenu.begin(), _clMenu.end()).c_str();
-			wc.lpszClassName = std::wstring(_name.begin(), _name.end()).c_str();
-			wc.hIconSm = _smIcon;
-
-			return RegisterClassExW(&wc);
 		}
 
 	}
