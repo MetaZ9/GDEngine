@@ -24,7 +24,7 @@ protected:
 	int values[];
 
 public:
-	IntSet(int, int...);
+	IntSet(int...);
 
 	int* getValues() const;
 	int get(const unsigned int) const;
@@ -33,7 +33,7 @@ public:
 };
 
 template<int T>
-IntSet<T>::IntSet(int T, int...)
+IntSet<T>::IntSet(int T...)
 	//:values(tuple_of<T, int>())
 {
 	// values = tuple_of<T, int>();
@@ -101,5 +101,11 @@ int Position::get() const {
 	return Coordinate<2>::get<U>();
 }
 */
-export typedef IntSet<2> Position;
-export typedef IntSet<2> Size;
+
+struct IntSet2 {
+	int x;
+	int y;
+};
+
+export typedef IntSet2 Position;
+export typedef IntSet2 Size;

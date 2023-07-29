@@ -1,8 +1,10 @@
 #include <wtypes.h>
+#include <stdexcept>
 module game;
 
 import <iostream>;
 import hal.input;
+import hal.output;
 
 Game::Game(const std::string _app_name, const HMODULE _instance)
 	:app_name(_app_name), processHandle(_instance)
@@ -12,8 +14,16 @@ Game::Game(const std::string _app_name, const HMODULE _instance)
 
 void Game::launch()
 {
-	app_window = new GDE::WindowControl::Window(app_name, Vector2(30, 30), Vector2(600, 400), GDE::WindowClasses::gWC, processHandle);
-	app_window->show(true);
+	try {
+		app_window = new GDE::WindowControl::Window(app_name, Vector2(30, 30), Vector2(600, 400), GDE::WindowClasses::gWC, processHandle);
+	}
+	catch (std::exception& e) {
+		std::cerr << e.what();
+
+		GDE::WindowClasses::safeStop();
+	}
+
+	app_window->show();
 	app_window->update();
 
 	loop();
