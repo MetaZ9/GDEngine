@@ -1,3 +1,4 @@
+#include <wtypes.h>
 export module hal.output;
 
 import <string>;
@@ -35,9 +36,12 @@ export namespace GDE {
 		export WNDCLASSEXW gWC;
 		typedef LRESULT(*WinProcFunc)(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-		export void safeStop();
-
 		export void init(WNDCLASSEXW& const, const HMODULE);
-		bool initializeWindowClass(WNDCLASSEXW& const, const std::string, const unsigned int, const int, const int, const HINSTANCE, const HICON, const HICON, const HCURSOR, const HBRUSH, const std::string, const WinProcFunc);
+
+		export void createWindowClass(const std::string, const WNDPROC, const HMODULE);
+		export HWND createWindow(const std::string, const std::string, const DWORD, const DWORD, const Position, const Size, const HWND, const HMENU, const HINSTANCE, const LPVOID);
+
+		export void safeStop();
+		export void displayError(const std::string);
 	}
 }

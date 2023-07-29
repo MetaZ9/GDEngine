@@ -12,6 +12,8 @@ private:
 
 	HMODULE processHandle;
 
+	bool quit = false;
+
 public:
 	Game(const std::string, const HMODULE);
 	void launch();

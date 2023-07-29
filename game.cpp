@@ -30,9 +30,12 @@ void Game::launch()
 }
 
 void Game::loop() {
-	bool result = true;
-
-	while (result) {
+	while (!quit) {
+		MSG message;
+		while (PeekMessage(&message, NULL, 0, 0, PM_REMOVE)) {
+			TranslateMessage(&message);
+			DispatchMessage(&message);
+		}
 		/*result = */ processInput();
 		updateData();
 		render();
@@ -44,14 +47,6 @@ void Game::processInput()
 {
 	std::cout << "Input" << std::endl;
 	GDE::Input::getInput();
-/*
-	MSG message;
-	while (GetMessage(&message, NULL, 0, 0) > 0)
-	{
-		TranslateMessage(&message);
-		DispatchMessage(&message);
-	}
-*/
 }
 
 void Game::updateData()
