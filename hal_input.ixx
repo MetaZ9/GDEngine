@@ -4,13 +4,22 @@ import <queue>;
 
 namespace GDE {
 	namespace Input {
-		typedef struct input {
-			unsigned int source;
-			unsigned int sourceType;
-			unsigned int inputType;
-			unsigned int inputData;
-		} inputMsg;
+		enum eInputType {
+			KeyDown = 0,
+			KeyUp
+		};
 
-		export std::queue<inputMsg> getInput();
+		typedef struct Input {			//WM 255 to 263, see : https://wiki.winehq.org/List_Of_Windows_Messages
+			eInputType inputType;
+			unsigned int keyCode;			//VK
+		} sInput;
+
+		export void clearInputs();
+		export void getInput();
+
+		export bool keyboardState[256] = {0};
+		export bool downKeys[256] = {0};
+		export bool upKeys[256] = {0};
 	}
+
 }

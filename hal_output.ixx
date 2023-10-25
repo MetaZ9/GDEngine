@@ -13,10 +13,16 @@ export namespace GDE {
 			DWORD exWinStyle;
 			DWORD winStyle;
 			Vector2 pos;
-			Vector2 size;
+			Vector2 size;			//check if client or window size / probably window size
 			WNDCLASSEXW wndClass;
 
 			HWND handle;
+
+			struct sFrame {
+				int width;
+				int height;
+				uint32_t* pixels;
+			} frame = {0};
 		public:
 			Window(const std::string, const Vector2, const Vector2, WNDCLASSEXW, const HMODULE);
 
@@ -24,6 +30,10 @@ export namespace GDE {
 			void toggleVisibility();
 			void show();
 			void hide();
+
+			void invalidateRect(const RECT*, bool);
+
+			Vector2 getBoardSize() const;		// Window-frame
 
 			void update();
 

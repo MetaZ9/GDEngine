@@ -6,6 +6,8 @@ module hal.output;
 import <string>;
 import <iostream>;
 import types;
+import hal.input;
+import game;
 
 namespace GDE {
 	namespace WindowControl {
@@ -15,7 +17,7 @@ namespace GDE {
 			handle = nullptr;
 
 			try {
-				handle = GDE::WindowClasses::createWindow("My first window UwU", "baseWindowClass", WS_OVERLAPPED | WS_SYSMENU, 0L, Position(CW_USEDEFAULT, CW_USEDEFAULT), Size(CW_USEDEFAULT, CW_USEDEFAULT), NULL, NULL, _instance, NULL);
+				handle = GDE::WindowClasses::createWindow(name, "baseWindowClass", WS_OVERLAPPED | WS_SYSMENU, 0L, Position(CW_USEDEFAULT, CW_USEDEFAULT), Size(CW_USEDEFAULT, CW_USEDEFAULT), NULL, NULL, _instance, NULL);
 			}
 			catch (std::exception& e) {
 				GDE::WindowClasses::displayError("createWindow");
@@ -57,6 +59,25 @@ namespace GDE {
 			if (!isSuccess)
 				"We are in trouble";
 
+		}
+
+		Vector2 Window::getBoardSize() const
+		{
+			RECT rect;
+			const bool isSuccess = GetClientRect(handle, &rect);
+
+			if (!isSuccess)
+				"We are in trouble";
+			else
+				return Vector2(rect.right - rect.left, rect.bottom - rect.top);
+		}
+
+		void Window::invalidateRect(const RECT* _lpRect, bool _bErase)
+		{
+			const bool isSuccess = InvalidateRect(handle, _lpRect, _bErase);
+
+			if (!isSuccess)
+				"We are in trouble";
 		}
 
 		void Window::update()
@@ -129,11 +150,100 @@ namespace GDE {
 					quit = true;
 
 					exit(EXIT_SUCCESS);
-					break;
+				break;
+/*
+				case WM_SIZE:
+					frame.width = LOWORD(_lParam);
+					frame.height = HIWORD(_lParam);
+				break;
+*/
+				case WM_KILLFOCUS:
+					GDE::Game::hasFocus = false;
+					memset(GDE::Input::keyboardState, 0, 256 * sizeof(GDE::Input::keyboardState[0]));
+					GDE::Input::clearInputs();
+//					mouse.buttons = 0;
+				break;
+				case WM_SETFOCUS:
+					GDE::Game::hasFocus = true;
+				break;
+
+				case WM_SYSKEYDOWN:
+				case WM_SYSKEYUP:
+				case WM_KEYDOWN:
+				case WM_KEYUP:
+					if (GDE::Game::hasFocus) {
+						static bool keyIsDown, keyWasDown;
+						keyIsDown = ((_lParam & (1 << 31)) == 0);
+						keyWasDown = ((_lParam & (1 << 30)) != 0);
+
+						if (keyIsDown != keyWasDown)
+							GDE::Input::keyboardState[(uint8_t)_wParam] = keyIsDown;
+
+						if (keyIsDown && !keyWasDown)
+							GDE::Input::downKeys[(uint8_t)_wParam] = keyIsDown;
+/*
+							if (keyIsDown) {
+								switch (_wParam) {
+									case VK_ESCAPE:
+										quit = true;
+
+									break;
+								}
+
+							}
+*/
+
+						if (!keyIsDown && keyWasDown)
+							GDE::Input::upKeys[(uint8_t)_wParam] = !keyIsDown;
+
+					}
+
+				break;
+/*
+				case WM_MOUSEMOVE:
+					mouse.x = LOWORD(_lParam);
+					mouse.y = frame.h - 1 - HIWORD(_lParam);
+				break;
+
+				case WM_LBUTTONDOWN:
+					mouse.buttons |= MOUSE_LEFT;
+				break;
+				case WM_LBUTTONUP:
+					mouse.buttons &= ~MOUSE_LEFT;
+				break;
+				case WM_MBUTTONDOWN:
+					mouse.buttons |= MOUSE_MIDDLE;
+				break;
+				case WM_MBUTTONUP:
+					mouse.buttons &= ~MOUSE_MIDDLE;
+				break;
+				case WM_RBUTTONDOWN:
+					mouse.buttons |= MOUSE_RIGHT;
+				break;
+				case WM_RBUTTONUP:
+					mouse.buttons &= ~MOUSE_RIGHT;
+				break;
+
+				case WM_XBUTTONDOWN:
+					if (GET_XBUTTON_WPARAM(_wParam) == XBUTTON1)
+						mouse.buttons |= MOUSE_X1;
+					else
+						mouse.buttons |= MOUSE_X2;
+				break;
+				case WM_XBUTTONUP:
+					if (GET_XBUTTON_WPARAM(_wParam) == XBUTTON1)
+						mouse.buttons &= ~MOUSE_X1;
+					else
+						mouse.buttons &= ~MOUSE_X2;
+				break;
+
+				case WM_MOUSEWHEEL:
+					printf("%s\n", _wParam & 0b10000000000000000000000000000000 ? "Down" : "Up");
+				break;
+*/
 				default:
 					return DefWindowProc(_wndHandle, _message, _wParam, _lParam);
-
-					break;
+				break;
 			}
 
 			return 0;
