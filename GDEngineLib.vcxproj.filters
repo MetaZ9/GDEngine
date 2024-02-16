@@ -59,5 +59,11 @@
     <ClCompile Include="types.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="game_part.ixx">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="game_part.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

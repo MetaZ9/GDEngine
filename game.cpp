@@ -1,6 +1,5 @@
 #include <wtypes.h>
 #include <stdexcept>
-//#include <ctime>
 module game;
 
 import <chrono>;
@@ -30,22 +29,21 @@ namespace GDE {
 			app_window->show();
 			app_window->update();
 
+			init();
+
 			loop();
 		}
 
 		void Game::bindInput(const unsigned int _key, const fp _func) {
-			boundKeys[_key].f1 = _func;
+			boundKeys[_key]->f1 = _func;
 		}
 
 		void Game::bindInput(const unsigned int _key, const int _msg) {
 			if (_msg == QUIT)
-				boundKeys[_key].f2 = &Game::close;
+				boundKeys[_key]->f2 = &Game::close;
 		}
 
 		void Game::loop() {
-			//std::time_t test = std::time(nullptr);
-			//long long t = std::time(nullptr);
-			//std::cout << (std::chrono::duration_cast<std::chrono::nanoseconds>)(std::chrono::steady_clock::now().time_since_epoch()).count() << std::endl;
 
 			long double loopInterval = 1000000000 / frequency;
 			long double delta = 0;
@@ -121,11 +119,17 @@ namespace GDE {
 				close();
 
 			for (unsigned int i = 0; i < 256; ++i) {
-				if (GDE::Input::downKeys[i] && boundKeys[i].f1 != nullptr) {
-					if (boundKeys[i].f1 != nullptr)
-						boundKeys[i].f1();
-					else if (boundKeys[i].f2 != nullptr)
-						(*this.*(boundKeys[i].f2))();
+				if (GDE::Input::downKeys[i]) {
+					//if (boundKeys[i]->f1 != NULL)
+					//	boundKeys[i]->f1();
+					//else if (boundKeys[i]->f2 != NULL)
+					//	(*this.*(boundKeys[i]->f2))();
+
+					auto it = boundBe.find(i);
+					if (it != boundBe.end()) {
+						// Invoke the stored callable object
+						it->second();
+					}
 				}
 
 			}

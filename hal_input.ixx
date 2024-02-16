@@ -11,7 +11,7 @@ namespace GDE {
 
 		typedef struct Input {			//WM 255 to 263, see : https://wiki.winehq.org/List_Of_Windows_Messages
 			eInputType inputType;
-			unsigned int keyCode;			//VK
+			unsigned __int64 keyCode;			//VK
 		} sInput;
 
 		export void clearInputs();

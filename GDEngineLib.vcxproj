@@ -160,6 +160,8 @@
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCppModuleInternalPartition</CompileAs>
     </ClCompile>
     <ClCompile Include="game.ixx" />
+    <ClCompile Include="game_part.cpp" />
+    <ClCompile Include="game_part.ixx" />
     <ClCompile Include="GDEngineLib.cpp" />
     <ClCompile Include="hal.cpp" />
     <ClCompile Include="hal.ixx" />
