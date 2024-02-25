@@ -148,6 +148,12 @@ namespace GDE {
 
 		void Game::close()
 		{
+			/*delete gameState_;
+			delete terrain_;
+
+			for (GDE::GamePart::Player* player : players_)
+				delete player;*/
+
 			delete app_window;
 		}
 

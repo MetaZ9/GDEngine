@@ -22,95 +22,105 @@ namespace GDE {
 
 		export class CRTPBase {
 		public:
-			virtual	void interface() = 0;
+			virtual	void recoverTrueType() = 0;
 		};
 
-		export template <typename Derived>
+		template <typename Derived>
 		class BaseRule: public CRTPBase {
-		public:
-			//template <typename... Args> void execute(Args&&... args) { std::cout << "Base" << std::endl; };
-			virtual	const std::type_info& getTypeInfo() const = 0;
-			void interface() override { /*std::cout << */ static_cast<Derived*>(this)->safeExecute();/* << std::endl;*/ };
-			//template <typename... Args> void execute(Args&&... args) { ; };
-			//inline void execute(this auto&& self) { self.execute(); };
-		};
-
-		/*template <typename Derived>
-		class BR {
-			virtual void execute() { (static_cast<Derived*>(this))->execute(); };
-		};
-
-		class R : public BR<R> {
-			void execute() override { std::cout << "Child" << std::endl; };
-		};*/
-
-		export template <typename F>
-		class GameRule : public BaseRule<GameRule<F>> {
-		private:
+		protected:
 			std::map<GPMessageType, CRTPBase*> successors;
 
 		public:
-			F action;
-			GameRule(F);
+			inline void addSuccessor(const GPMessageType, CRTPBase&);
+			inline void removeSuccessor(const GPMessageType);
 
-			template <typename U>
-			inline void						addSuccessor	(const GPMessageType, GameRule<U>&);
-			inline void						removeSuccessor	(const GPMessageType);
+			inline void recoverTrueType() override;
 
-			inline const std::type_info&	getTypeInfo()	const	override;
-
-			template <typename... Args> requires std::invocable<F, Args...> void execute(Args&&...);
-			inline void safeExecute() { ; };
-
-			~GameRule();
+			~BaseRule();
 		};
 
-		template <typename F> GameRule<F>::GameRule(F _act)
+		template <typename Derived>
+		void BaseRule<Derived>::addSuccessor(const GPMessageType _srcMsg, CRTPBase& _ruleTarget) {
+			successors[_srcMsg] = &_ruleTarget;
+		}
+
+		template <typename Derived>
+		void BaseRule<Derived>::removeSuccessor(const GPMessageType _srcMsg) {
+			successors.erase(_srcMsg);
+		}
+
+		template <typename Derived>
+		void BaseRule<Derived>::recoverTrueType() {
+			static_cast<Derived*>(this)->safeExecute();
+		}
+
+		template <typename D>
+		BaseRule<D>::~BaseRule() {
+			for (auto& [k, v] : successors)
+				delete v;
+		}
+
+		export template <typename B, typename... Args> requires std::invocable<B, Args...>
+		class InnerRule : public BaseRule<InnerRule<B, Args...>> {
+		public:
+			B action;
+			const unsigned int parameters;
+
+			InnerRule(B, Args&&...);
+
+			void safeExecute();
+			void execute(Args&&...);
+		};
+
+		template <typename B, typename... Args> requires std::invocable<B, Args...>
+		InnerRule<B, Args...>::InnerRule(B _havior, Args&&... _params)
+			:action(_havior), parameters(sizeof...(_params)) {}
+
+		template <typename B, typename... Args> requires std::invocable<B, Args...>
+		void InnerRule<B, Args...>::safeExecute() {
+			if (parameters == 0)
+				execute();
+			else
+				;
+		}
+
+		template <typename B, typename... Args> requires std::invocable<B, Args...>
+		void InnerRule<B, Args...>::execute(Args&&... args) {
+			GPMessageType result = std::invoke(action, std::forward<Args>(args)...);
+		}
+
+		export template <typename B>
+		class GameRule : public BaseRule<GameRule<B>> {
+
+		public:
+			B action;
+			GameRule(B);
+
+			template <typename... Args> requires std::invocable<B, Args...> void execute(Args&&...);
+			inline void safeExecute() { ; };
+
+			//~GameRule();
+		};
+
+		template <typename B> GameRule<B>::GameRule(B _act)
 			: action(_act) {
 		}
 
-		template <typename F> inline const std::type_info& GameRule<F>::getTypeInfo() const {
-			return typeid(F);
-		}
-
-		template <typename F> template <typename U> inline void GameRule<F>::addSuccessor(const GPMessageType _mess, GameRule<U>& _rule) {
-			std::cout << "Adding successor" << std::endl;
-			std::cout << &_rule << std::endl;
-			std::cout << typeid(_rule).name() << std::endl;
-			//successors.emplace(_mess, std::make_unique<GameRule<U>>(_rule));
-
-			//std::cout << _rule.getTypeInfo().name() << std::endl;
-			successors[_mess] = &_rule;
-			std::cout << "Successor added" << std::endl;
-			std::cout << successors[_mess] << std::endl;
-			std::cout << typeid(successors[_mess]).name() << std::endl;
-		}
-
-		template <typename F> inline void GameRule<F>::removeSuccessor(const GPMessageType _mess) {
-			successors.erase(_mess);
-		}
-
-		template <typename F> template <typename... Args> requires std::invocable<F, Args...>
-		void GameRule<F>::execute(Args&&... args) {
+		template <typename B> template <typename... Args> requires std::invocable<B, Args...>
+		void GameRule<B>::execute(Args&&... args) {
 			GPMessageType result = std::invoke(action, std::forward<Args>(args)...);
 
 			if (result != nothing) {
-				auto it = successors.find(result);
+				auto it = this->successors.find(result);
 
-				if (it != successors.end()) {
-					std::cout << result << std::endl;
+				if (it != this->successors.end()) {
 					auto next = it->second;
-					next->interface();
+					next->recoverTrueType();
 
 				}
 
 			}
 
-		}
-
-		template <typename F> GameRule<F>::~GameRule() {
-			for (auto& [k, v] : successors)
-				delete v;
 		}
 
 	}

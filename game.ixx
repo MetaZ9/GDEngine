@@ -9,6 +9,8 @@ export import game_part;
 
 namespace GDE {
 	namespace Game {
+		export class GameState {};
+
 		export class Game {
 		private:
 			std::string app_name;
@@ -36,6 +38,10 @@ namespace GDE {
 			GamePart::CRTPBase* boundKeys2[256];
 			std::unordered_map<unsigned int, std::function<void()>> boundBe;
 			std::unordered_map<int, std::function<void()>> boundBe2;
+
+			//GDE::Game::GameState* gameState_;
+			//std::vector<GDE::GamePart::Player*> players_;
+			//GDE::GamePart::Terrain* terrain_;
 
 		public:
 			enum eCoreMessages {
@@ -73,8 +79,6 @@ namespace GDE {
 		};
 
 		export bool hasFocus = true;
-
-		export class GameState {};
 	}
 
 }
