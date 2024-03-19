@@ -1,8 +1,9 @@
 #include <wtypes.h>
 #include <stdexcept>
+#include <chrono>
 module game;
 
-import <chrono>;
+//import <chrono>;
 import <iostream>;
 import hal.input;
 import hal.output;

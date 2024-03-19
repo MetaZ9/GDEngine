@@ -9,12 +9,22 @@ export import game_part;
 
 namespace GDE {
 	namespace Game {
-		export class GameState {};
+		export class GameState {
+		public:
+			GDE::GamePart::Player* currentPlayer_;
+
+		public:
+			inline virtual const GDE::GamePart::Player& getCurrentPlayer() const { return *currentPlayer_; };
+			inline virtual GDE::GamePart::Player& getCurrentPlayer() { return *currentPlayer_; };
+			inline void setCurrentPlayer(GDE::GamePart::Player& _newCP) { currentPlayer_ = &_newCP; };
+		};
 
 		export class Game {
 		private:
 			std::string app_name;
 			GDE::WindowControl::Window* app_window;
+
+
 
 			HMODULE processHandle;
 
@@ -40,6 +50,7 @@ namespace GDE {
 			std::unordered_map<int, std::function<void()>> boundBe2;
 
 			//GDE::Game::GameState* gameState_;
+			std::vector<GDE::GamePart::Player*> players_;
 			//std::vector<GDE::GamePart::Player*> players_;
 			//GDE::GamePart::Terrain* terrain_;
 
@@ -55,6 +66,10 @@ namespace GDE {
 			void bindInput(const unsigned int, const fp);
 			void bindInput(const unsigned int, const int);
 			template <typename F, typename ...Args> requires std::invocable<F, Args...> void bindInput(const unsigned int, GamePart::CRTPBase*, Args...);
+
+			inline void addPlayer(GDE::GamePart::Player* _np) {
+				players_.push_back(_np);
+			};
 
 			void close();
 			~Game();
@@ -75,7 +90,6 @@ namespace GDE {
 				static_cast<GamePart::GameRule<F>*>(_rule)->execute(_args...);
 			};
 			boundBe[_key] = callable;
-
 		};
 
 		export bool hasFocus = true;
