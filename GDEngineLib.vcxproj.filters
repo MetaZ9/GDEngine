@@ -29,28 +29,10 @@
     <ClCompile Include="pch.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="hal.ixx">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="hal_output.ixx">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="types.ixx">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="hal_output.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="hal.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="game.ixx">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="game.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="hal_input.ixx">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="hal_input.cpp">
@@ -59,11 +41,59 @@
     <ClCompile Include="types.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="game_part.ixx">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
     <ClCompile Include="game_part.cpp">
       <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="ecs_core.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="core.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="core.ixx">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClCompile>
+    <ClCompile Include="components.ixx">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClCompile>
+    <ClCompile Include="ecs_core.ixx">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClCompile>
+    <ClCompile Include="entities.ixx">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClCompile>
+    <ClCompile Include="gameplay.ixx">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClCompile>
+    <ClCompile Include="game_part.ixx">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClCompile>
+    <ClCompile Include="gamestate.ixx">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClCompile>
+    <ClCompile Include="gde.ixx">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClCompile>
+    <ClCompile Include="hal.ixx">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClCompile>
+    <ClCompile Include="hal_input.ixx">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClCompile>
+    <ClCompile Include="hal_output.ixx">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClCompile>
+    <ClCompile Include="rule.ixx">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClCompile>
+    <ClCompile Include="systems.ixx">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClCompile>
+    <ClCompile Include="types.ixx">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClCompile>
+    <ClCompile Include="game.ixx">
+      <Filter>Fichiers d%27en-tête</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

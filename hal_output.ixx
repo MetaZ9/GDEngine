@@ -5,26 +5,70 @@ import <string>;
 import <Windows.h>;
 import types;
 
+namespace GDE {
+	namespace Window {
+		/**
+		* Generic (not for now lol) window class
+		*/
+		class Window {
+		private:
+			/// name of the window
+			std::string name_;
+			/// extended style data for the window (Windows : https://learn.microsoft.com/en-us/windows/win32/winmsg/extended-window-styles)
+			//DWORD exWinStyle_;
+			/// style data for the window (Windows : https://learn.microsoft.com/en-us/windows/win32/winmsg/window-styles)
+			//DWORD winStyle_;
+			/// position of the window on screen in px
+			Position pos_;
+			/// size of the window in px
+			Size size_;
+			/// data of the class of the window (Windows : https://learn.microsoft.com/fr-fr/windows/win32/api/winuser/ns-winuser-wndclassexw)
+			WNDCLASSEXW wndClass_;
+
+			/// address of the DLL (Windows)
+			HWND handle_;
+
+		public:
+			Window(const std::string, const Position, const Size, WNDCLASSEXW, const HMODULE);
+
+			void setVisibility(const int);
+			void toggleVisibility();
+			void show();
+			void hide();
+
+			//void invalidateRect(const RECT*, bool);
+
+			Size getBoardSize() const;
+
+			void update();
+
+			~Window();
+		};
+
+	}
+
+	namespace OS::Windows {
+		void init(WNDCLASSEXW& const, const HMODULE);
+		void createWindowClass(const std::string, const WNDPROC, const HMODULE);
+		HWND createWindow(const std::string, const std::string, const DWORD, const DWORD, const Position, const Size, const HWND, const HMENU, const HINSTANCE, const LPVOID);
+	}
+}
+
 export namespace GDE {
-	export namespace WindowControl{
+	export namespace WindowControl {
 		export class Window {
 		private:
 			std::string name;
 			DWORD exWinStyle;
 			DWORD winStyle;
-			Vector2 pos;
-			Vector2 size;			//check if client or window size / probably window size
+			Position pos;
+			Size size;			//check if client or window size / probably window size
 			WNDCLASSEXW wndClass;
 
 			HWND handle;
 
-			struct sFrame {
-				int width;
-				int height;
-				uint32_t* pixels;
-			} frame = {0};
 		public:
-			Window(const std::string, const Vector2, const Vector2, WNDCLASSEXW, const HMODULE);
+			Window(const std::string, const Position, const Size, WNDCLASSEXW, const HMODULE);
 
 			void setVisibility(const int);
 			void toggleVisibility();

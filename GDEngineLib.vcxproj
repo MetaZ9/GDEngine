@@ -159,12 +159,18 @@
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="game.cpp">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCppModuleInternalPartition</CompileAs>
-    </ClCompile>
+    <ClCompile Include="components.ixx" />
+    <ClCompile Include="core.cpp" />
+    <ClCompile Include="core.ixx" />
+    <ClCompile Include="ecs_core.cpp" />
+    <ClCompile Include="ecs_core.ixx" />
+    <ClCompile Include="entities.ixx" />
     <ClCompile Include="game.ixx" />
+    <ClCompile Include="gameplay.ixx" />
+    <ClCompile Include="gamestate.ixx" />
     <ClCompile Include="game_part.cpp" />
     <ClCompile Include="game_part.ixx" />
+    <ClCompile Include="gde.ixx" />
     <ClCompile Include="GDEngineLib.cpp" />
     <ClCompile Include="hal.cpp" />
     <ClCompile Include="hal.ixx" />
@@ -178,6 +184,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="rule.ixx" />
+    <ClCompile Include="systems.ixx" />
     <ClCompile Include="types.cpp" />
     <ClCompile Include="types.ixx" />
   </ItemGroup>
