@@ -159,6 +159,8 @@
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="application.cpp" />
+    <ClCompile Include="application.ixx" />
     <ClCompile Include="components.ixx" />
     <ClCompile Include="core.cpp" />
     <ClCompile Include="core.ixx" />
