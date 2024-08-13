@@ -1,13 +1,51 @@
-#include <chrono>
+#include <string>
 module core;
 
-import <iostream>;
-import hal.input;
+namespace GDE::Entities {
+	Entity::Entity(const std::string _name)
+		: name_(_name), components_(std::vector<Components::Component*>())
+	{
 
-namespace GDE::Component {
+	}
+
+	const std::string Entity::getName() const {
+		return name_;
+	}
+
+	std::string Entity::getName() {
+		return name_;
+	}
+
+	Entity::~Entity() {
+		for (Components::Component* comp : components_)
+			delete comp;
+
+		components_.clear();
+	}
 
 }
 
+namespace GDE::Components {
+	Component::Signature Component::getSignature() {
+		return this->compSign_;
+	}
+
+	Component::Signature Component::getSSignature() {
+		return Component::compSign_;
+	}
+
+}
+
+namespace GDE::Systems {
+	System::System(const std::string _name)
+		: name_(_name)
+	{
+
+	}
+
+}
+
+/*
 namespace GDE {
 	namespace Game {
 		Game::Game(const std::string _app_name, const HMODULE _instance)
@@ -65,7 +103,7 @@ namespace GDE {
 				lastTime = currentTime;
 
 				if (delta >= 1) {
-					/*result = */ processInput();
+					processInput(); //result =
 					updateData();
 					render();
 
@@ -112,11 +150,11 @@ namespace GDE {
 
 		void Game::exit()
 		{
-			/*delete gameState_;
-			delete terrain_;
+			//delete gameState_;
+			//delete terrain_;
 
-			for (GDE::GamePart::Player* player : players_)
-				delete player;*/
+			//for (GDE::GamePart::Player* player : players_)
+			//	delete player;
 
 			for (GamePart::System* sys : registeredSystems_)
 				delete sys;
@@ -153,4 +191,4 @@ namespace GDE {
 
 	}
 
-}
+}*/

@@ -1,6 +1,5 @@
 export module gamestate;
 
-
 namespace GDE {
 	namespace Core {
 		enum State {
@@ -8,7 +7,7 @@ namespace GDE {
 			turn
 		};
 
-		class GameState {
+		export class GameState {
 		/*
 		public:
 			Player* currentPlayer_;

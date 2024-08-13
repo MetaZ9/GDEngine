@@ -1,4 +1,4 @@
-#ifndef __wtypes_h__
+/*#ifndef __wtypes_h__
 #include <wtypes.h>
 #endif
 
@@ -17,12 +17,12 @@
 #ifdef _MSC_VER
 #pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
 #endif
-#define RC_INVOKED
+#define RC_INVOKED*/
+#include<wtypes.h>
 
 module hal.input;
 
-import <iostream>;
-import <string>;
+//import std;
 
 namespace GDE {
 	namespace Input {

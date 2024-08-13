@@ -1,18 +1,32 @@
 #include <wtypes.h>
 #include <strsafe.h>
+#include <string>
 module application;
 
 namespace GDE::Core {
+	/**
+	* Displays an error in console
+	* 
+	* @param _functionName The place the error is located
+	*/
 	void displayError(const std::string _functionName) {
 		OS::Windows::displayError(_functionName);
 	}
 
+	/**
+	* Safely stops the entire program
+	*/
 	void safeStop() {
 		OS::Windows::safeStop();
 	}
 }
 
 namespace GDE::OS::Windows {
+	/**
+	* Displays an error in console (Window version
+	* 
+	* @param _functionName The place the error is located
+	*/
 	void displayError(const std::string _functionName) {
 		int wchars_num = MultiByteToWideChar(CP_UTF8, 0, _functionName.c_str(), -1, NULL, 0);
 		wchar_t* wstr = new wchar_t[wchars_num];
@@ -35,11 +49,22 @@ namespace GDE::OS::Windows {
 		delete[] wstr;
 	}
 
+	/**
+	* Safely stops the entire program (Windows version)
+	*/
 	void safeStop() {
 		exit(EXIT_FAILURE);
 	}
 	
-	LRESULT CALLBACK basicGameWindowProcFunc(HWND _wndHandle, UINT _message, WPARAM _wParam, LPARAM _lParam) {
+	/**
+	* Window procedure for base game windows
+	* 
+	* @param _wndHandle Handle to the window
+	* @param _message The message sent to the window
+	* @param _wParam Params for the message
+	* @param _lParam Other params for the message
+	*/
+	LRESULT CALLBACK basicGameWindowProc(HWND _wndHandle, UINT _message, WPARAM _wParam, LPARAM _lParam) {
 		switch (_message) {
 		case WM_QUIT:
 		case WM_DESTROY:

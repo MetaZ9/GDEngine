@@ -1,20 +1,23 @@
+#include <concepts>
+#include <map>
 export module gameplay;
 
-import <concepts>;
+//import std;
 
 namespace GDE {
 	namespace Rule {
-		class CRTPRule {
+		export class CRTPRule {
 		public:
 			virtual	void recoverTrueType() = 0;
 		};
 
-		enum GPMessageType {
+		export enum GPMessageType {
 			fail,
 			win,
 			draw,
 			nextTurn,
-			nothing
+			nothing,
+			end
 		};
 
 		template <typename Derived>
@@ -52,14 +55,19 @@ namespace GDE {
 				delete v;
 		}
 
-		template <typename B>
-		class InnerRule : public InnerRule<GameRule<B>> {
+		export template <typename B>
+		class InnerRule : public BaseRule<InnerRule<B>> {
 		private:
 			B action;
 		public:
 			InnerRule(B);
 
 			template <typename... Args> requires std::invocable<B, Args...> void execute(Args&&...);
+
+			inline const B getAction() const {
+				return action;
+			};
+
 			inline void safeExecute() { ; };
 		};
 

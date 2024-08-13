@@ -1,7 +1,5 @@
 export module hal.input;
 
-import <queue>;
-
 namespace GDE {
 	namespace Input {
 		enum eInputType {

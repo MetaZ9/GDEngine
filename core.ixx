@@ -1,10 +1,10 @@
 #include <wtypes.h>
+#include <string>
+#include <vector>
+#include <bitset>
 export module core;
 
-import <string>;
-import <unordered_map>;
-import <functional>;
-import <bitset>;
+//import std;
 
 namespace GDE {
 	namespace Core {
@@ -14,95 +14,106 @@ namespace GDE {
 
 	}
 
-	namespace Entity {
-		class Entity : public Core::Object {
-		private:
-			std::string name;
-
-		public:
-			Entity();
-			//template <typename... Comps> requires std::is_base_of_v<Component::Component, Comps...> Entity(std::string, Comps...);
-
-			const std::string getName() const;
-			std::string getName();
-
-			inline void addComponent(Component::Component*);
-			template <Component::ComponentType T> inline void addComponent();
-
-			template <Component::ComponentType T> inline const T* getComponent() const;
-			template <Component::ComponentType T> inline T* getComponent();
-
-			template <Component::ComponentType T> inline std::vector<T*> getComponents();
-
-			~Entity();
-		};
-
-	}
-
-	namespace Component {
-		class Component : public Core::Object {
+	namespace Components {
+		export class Component : public Core::Object {
 		protected:
 			using Signature = std::bitset<10>;
-			static constexpr Signature compSign_;
+			static constexpr Signature compSign_ = 0b0;
 
 		public:
-			virtual Signature getSignature() = 0 {
-				return this->compSign_;
-			};
+			virtual Signature getSignature() = 0;// {
+				//return this->compSign_;
+			//};
 
-			static Signature getSSignature() {
-				return Component::compSign_;
-			};
+			static Signature getSSignature();// {
+				//return Component::compSign_;
+			//};
 
+			virtual ~Component() =0;
 		};
 
 		template <typename T> concept ComponentType = std::is_base_of_v<Component, T>;
 	}
 
-	namespace System {
-		class System : public Core::Object {
+	namespace Entities {
+		export class Entity : public Core::Object {
+		private:
+			std::string name_;
+
+			std::vector<Components::Component*> components_;
+
+		public:
+			Entity(const std::string);
+			//template <typename... Comps> requires std::is_base_of_v<Component::Component, Comps...> Entity(std::string, Comps...);
+
+			const std::string getName() const;
+			std::string getName();
+
+			template <Components::ComponentType T> inline void addComponent();
+
+			template <Components::ComponentType T> inline const T* getComponent() const;
+			template <Components::ComponentType T> inline T* getComponent();
+
+			template <Components::ComponentType T> inline std::vector<T*> getComponents();
+
+			virtual ~Entity() =0;
+		};
+
+	}
+
+	namespace Systems {
+		export class System : public Core::Object {
+		private:
+			std::string name_;
+
 		public:
 			using Signature = std::bitset<10>;
-			static constexpr Signature readComponents_;
+			static constexpr Signature readComponents_ = 0b0;
+
+			System(const std::string);
 
 			virtual void update() const = 0;
 			virtual void render() const = 0;
+
+			virtual ~System() =0;
 		};
 
 	}
 
 }
 
-namespace GDE::Entity {
-	/*template <typename... Comps> requires std::is_base_of_v<Component::Component, Comps...>
-	Entity::Entity(std::string _name, Comps... _comps)
-		:Entity(), name(_name)
-	{
-		Game::gameRef->addComponentsTo(this, _comps);
-	}*/
+namespace GDE::Entities {
+	//template <typename... Comps> requires std::is_base_of_v<Component::Component, Comps...>
+	//Entity::Entity(std::string _name, Comps... _comps)
+		//:Entity(), name(_name)
+	//{
+		//Game::gameRef->addComponentsTo(this, _comps);
+	//}
 
-	template <Component::ComponentType T>
+	template <Components::ComponentType T>
 	inline void Entity::addComponent() {
+
 		//Game::gameRef->addComponentTo(this, new T);
 	}
 
-	template <Component::ComponentType T>
+	template <Components::ComponentType T>
 	inline const T* Entity::getComponent() const {
 		//return Game::gameRef->getComponent<T>(this);
 	}
 
-	template <Component::ComponentType T>
+	template <Components::ComponentType T>
 	inline T* Entity::getComponent() {
 		//return Game::gameRef->getComponent<T>(this);
 	}
 
-	template <Component::ComponentType T>
+	template <Components::ComponentType T>
 	inline std::vector<T*> Entity::getComponents() {
 		//return Game::gameRef->getComponents<T>(this);
 	}
 
 }
 
+/*
 namespace GDE {
 	namespace GamePart {
 		export class Object {};
@@ -322,4 +333,4 @@ namespace GDE {
 		}
 	}
 
-}
+}*/
