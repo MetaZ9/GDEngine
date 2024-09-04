@@ -65,9 +65,6 @@
     <ClCompile Include="hal_output.ixx">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClCompile>
-    <ClCompile Include="rule.ixx">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClCompile>
     <ClCompile Include="systems.ixx">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClCompile>
@@ -102,6 +99,12 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClCompile>
     <ClCompile Include="components.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="players.ixx">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClCompile>
+    <ClCompile Include="players.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

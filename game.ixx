@@ -1,11 +1,11 @@
-#include <wtypes.h>
-#include <unordered_map>
-#include <concepts>
-#include <string>
-#include <functional>
 export module game;
 
-//import std;
+import <wtypes.h>;
+import <unordered_map>;
+import <concepts>;
+import <string>;
+import <functional>;
+import <tuple>;
 import core;
 import hal.output;
 import gameplay;
@@ -89,32 +89,33 @@ namespace GDE {
 			const std::string game_name_;
 
 			Application* a_;
-			GameState* gs_;
 
 			Input::InputManager* im_;
 			Entities::EntityManager* em_;
 			Systems::SystemManager* sm_;
 
 			std::vector<PlaySpaces::PlaySpace*> playspaces_;
+			std::vector<Players::Player*> players_;
 
 			unsigned int frequency_ = 60;
 			bool quit_ = false;
+
+		protected:
+			GameState* gs_;
 
 		public:
 			Game() = delete;
 			Game(const std::string, const HMODULE);
 
 			template <typename F, typename ...Args> requires std::invocable<F, Args...> void bindInput(const unsigned int, Rule::CRTPRule*, Args...);
-
 			template <typename T> requires std::is_base_of_v<PlaySpaces::PlaySpace, T> T* createPlaySpace(const std::string);
-
 			template <typename T> requires std::is_base_of_v<Entities::Entity, T> T* createEntity(const std::string);
-			Entities::Entity* getEntity(const std::string);
-
-			//template <typename E, typename PS> requires std::is_base_of_v<Entities::Entity, E> and std::is_base_of_v<PlaySpaces::PlaySpace, PS> void addToPlaySpace(E* const, PS* const);
-			void addToPlaySpace(const std::string, const std::string);
-
+			template <typename T> requires std::is_base_of_v<Players::Player, T> T* createPlayer(const std::string);
 			template <typename T> requires std::is_base_of_v<Systems::System, T> T* registerSystem(const std::string);
+
+			Entities::Entity* getEntity(const std::string);
+			Players::Player* getPlayer(const unsigned int);
+			PlaySpaces::PlaySpace* getPlaySpace(const std::string);
 
 			void launch();
 			void exit();
@@ -135,9 +136,10 @@ namespace GDE {
 }
 
 namespace GDE::Core {
+
 	template <typename F, typename ...Args> requires std::invocable<F, Args...>
 	void Game::bindInput(const unsigned int _key_code, Rule::CRTPRule* _rule, Args... _args) {
-		im_->bindInput(_key_code, _rule, _args);
+		im_->bindInput<F, Args...>(_key_code, _rule, _args...);
 	}
 
 	template <typename T> requires std::is_base_of_v<PlaySpaces::PlaySpace, T>
@@ -151,6 +153,12 @@ namespace GDE::Core {
 		return em_->addEntity<T>(_ent_name);
 	}
 
+	template <typename T> requires std::is_base_of_v<Players::Player, T>
+	T* Game::createPlayer(const std::string _player_name) {
+		players_.push_back(new T(_player_name));
+		return static_cast<T*>(players_.back());
+	}
+
 	template <typename T> requires std::is_base_of_v<Systems::System, T>
 	T* Game::registerSystem(const std::string _sys_name) {
 		return sm_->registerSystem(_sys_name);
@@ -161,7 +169,10 @@ namespace GDE::Core {
 namespace GDE::Entities {
 	template <typename T> requires std::is_base_of_v<Entities::Entity, T>
 	T* EntityManager::addEntity(const std::string _ent_name) {
-		entities_.insert(entities_.size(), new T(_ent_name));
+		T* ent = new T(_ent_name);
+		entities_.insert({entities_.size(), ent});
+
+		return ent;
 	}
 
 }

@@ -1,28 +1,6 @@
-/*#ifndef __wtypes_h__
-#include <wtypes.h>
-#endif
-
-#ifndef __WINDEF_
-#include <windef.h>
-#endif
-
-#ifndef _WINUSER_
-#include <winuser.h>
-#endif
-
-#ifndef __RPC_H__
-#include <rpc.h>
-#endif
-
-#ifdef _MSC_VER
-#pragma comment(linker, "/subsystem:windows /ENTRY:mainCRTStartup")
-#endif
-#define RC_INVOKED*/
-#include<wtypes.h>
-
 module hal.input;
 
-//import std;
+import <wtypes.h>;
 
 namespace GDE {
 	namespace Input {
@@ -38,13 +16,10 @@ namespace GDE {
 				TranslateMessage(&message);
 				DispatchMessage(&message);
 
-				if (message.message == WM_KEYDOWN or message.message == WM_SYSKEYDOWN or message.message == WM_KEYUP or message.message == WM_SYSKEYUP) {
-					//std::cout << message.message << " : " << message.wParam << std::endl;
-				
+				if (message.message == WM_KEYDOWN or message.message == WM_SYSKEYDOWN or message.message == WM_KEYUP or message.message == WM_SYSKEYUP) {				
 					sInput input;
 					input.inputType = ((message.message == WM_KEYDOWN or message.message == WM_SYSKEYDOWN) ? KeyDown : KeyUp);
 					input.keyCode = message.wParam;
-
 				}
 
 			}

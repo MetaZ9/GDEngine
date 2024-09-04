@@ -1,36 +1,23 @@
-#include <string>
 export module aspect.playspaces;
 
+import <string>;
 import core;
 import aspect.gameobjects;
 
 namespace GDE {
 	namespace PlaySpaces {
 		export class PlaySpace : public Entities::Entity {
-		private:
+		protected:
 			std::vector<GameObjects::GameObject*> game_objects_;
 
 		public:
 			PlaySpace(const std::string);
 
-			void addGameObject(GameObjects::GameObject* const);
+			void addGameObject(GameObjects::GameObject* const, const int, const int);
 
 			virtual ~PlaySpace() = 0;
 		};
 
-		export class TTTPS : public PlaySpace {
-		private:
-			/*
-				cells
-				cell relations
-				grid/cell type (square, isometric, hexagonal etc.)
-				sizes
-				squareGrid
-			*/
-		public:
-			TTTPS(const std::string);
-			
-		};
-
 	}
+
 }

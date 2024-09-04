@@ -1,12 +1,10 @@
-#include <wtypes.h>
-#include <string>
 #include <chrono>
-#include <exception>
 #include <iostream>
 module game;
 
 import application;
 import hal.input;
+import components;
 
 namespace GDE::Core {
 	Game::Game(const std::string _game_name, const HMODULE _instance)
@@ -18,10 +16,7 @@ namespace GDE::Core {
 		em_ = new Entities::EntityManager();
 		sm_ = new Systems::SystemManager(em_);
 
-		Rule::InnerRule exitRule = Rule::InnerRule([this]() -> Rule::GPMessageType { exit(); return Rule::GPMessageType::end; });
-		//auto exitRule = [this]() -> void {
-		//	exit();
-		//};
+		Rule::InnerRule exitRule = Rule::InnerRule([this]() -> Rule::GPMessageType { exit(); return Rule::GPMessageType::nothing; });
 
 		im_->bindInput<decltype(exitRule.getAction())>(27, &exitRule);
 	}
@@ -30,15 +25,16 @@ namespace GDE::Core {
 		return em_->getEntityByName(_ent_name);
 	}
 
-	void Game::addToPlaySpace(const std::string _ent_name, const std::string _ps_name) {
-		/*Entities::Entity* ent = getEntity(_ent_name);
+	Players::Player* Game::getPlayer(const unsigned int _i) {
+		return players_[_i];
+	}
 
+	PlaySpaces::PlaySpace* Game::getPlaySpace(const std::string _name) {
 		for (PlaySpaces::PlaySpace* ps : playspaces_)
-			if (ps->getName() == _ps_name) {
-				ps->addGameObject(ent);
-				break;
-			}*/
+			if (ps->getName() == _name)
+				return ps;
 
+		return nullptr;
 	}
 
 	void Game::launch() {
@@ -73,37 +69,24 @@ namespace GDE::Core {
 	
 	void Game::processInput()
 	{
-		//std::cout << "Input" << std::endl;
 		Input::clearInputs();
 		Input::getInput();
-
-		if (Input::keyboardState[27])
-			exit();
 
 		for (unsigned int i = 0; i < 256; ++i)
 			if (Input::downKeys[i] and im_->isBound(i))
 				(im_->getAction(i))();
-				//auto it = boundKeys.find(i);
-				//if (it != boundKeys.end())
-				//	it->second();
 	}
 
 	void Game::updateData() {
 		sm_->update();
-		//for (Systems::System* sys : registeredSystems_)
-		//	sys->update();
-		//std::cout << "Update" << std::endl;
 	}
 
 	void Game::render() {
 		sm_->render();
-		//for (Systems::System* sys : registeredSystems_)
-		//	sys->render();
-		//std::cout << "Render" << std::endl;
 	}
 
 	void Game::exit() {
-		Core::safeStop();
+		quit = true;
 	}
 
 	Game::~Game() {
@@ -114,6 +97,9 @@ namespace GDE::Core {
 		delete sm_;
 
 		for (PlaySpaces::PlaySpace* ps : playspaces_)
+			delete ps;
+
+		for (Players::Player* ps : players_)
 			delete ps;
 	}
 
@@ -183,6 +169,8 @@ namespace GDE::Entities {
 	EntityManager::~EntityManager() {
 		for (auto e : entities_)
 			delete e.second;
+
+		entities_.clear();
 	}
 
 }

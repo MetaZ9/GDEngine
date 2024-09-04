@@ -1,4 +1,3 @@
-#include <string>
 module aspect.gameobjects;
 
 namespace GDE::GameObjects {

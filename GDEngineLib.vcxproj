@@ -121,6 +121,8 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <EnableModules>true</EnableModules>
+      <BuildStlModules>true</BuildStlModules>
+      <CompileAs>Default</CompileAs>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -185,9 +187,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="players.cpp" />
+    <ClCompile Include="players.ixx" />
     <ClCompile Include="playspaces.cpp" />
     <ClCompile Include="playspaces.ixx" />
-    <ClCompile Include="rule.ixx" />
     <ClCompile Include="systems.ixx" />
     <ClCompile Include="types.cpp" />
     <ClCompile Include="types.ixx" />

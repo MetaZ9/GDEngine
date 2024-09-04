@@ -1,7 +1,4 @@
-﻿#include <vector>
-
-export module types;
-//import <vector>;
+﻿export module types;
 
 export typedef struct Vector2 {
 	int x;

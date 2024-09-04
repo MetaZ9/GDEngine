@@ -1,6 +1,6 @@
-#include <string>
 export module aspect.gameobjects;
 
+import <string>;
 import core;
 import components;
 
@@ -10,13 +10,12 @@ namespace GDE {
 		private:
 		public:
 			GameObject(const std::string);
-
 		};
 
-		export class StatefulCell : public GameObject {
-		private:
+		export template <typename T>
+		class StatefulCell : public GameObject {
 		public:
-			template <typename T> StatefulCell(const std::string);
+			StatefulCell(const std::string);
 
 			~StatefulCell();
 		};
@@ -27,10 +26,15 @@ namespace GDE {
 
 namespace GDE::GameObjects {
 	template <typename T>
-	StatefulCell::StatefulCell(const std::string _name)
+	StatefulCell<T>::StatefulCell(const std::string _name)
 		: GameObject(_name)
 	{
 		addComponent<Components::StateComp<T>>();
+	}
+
+	template <typename T>
+	StatefulCell<T>::~StatefulCell() {
+
 	}
 
 }

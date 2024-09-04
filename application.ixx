@@ -1,8 +1,7 @@
 #include <wtypes.h>
-#include <string>
 export module application;
 
-//import std;
+import <string>;
 import hal.input;
 
 namespace GDE::Core {

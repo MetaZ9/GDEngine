@@ -1,5 +1,6 @@
-#include <string>
 module aspect.playspaces;
+
+import components;
 
 namespace GDE::PlaySpaces {
 	PlaySpace::PlaySpace(const std::string _name)
@@ -8,14 +9,13 @@ namespace GDE::PlaySpaces {
 
 	}
 
-	void PlaySpace::addGameObject(GameObjects::GameObject* const _go) {
+	void PlaySpace::addGameObject(GameObjects::GameObject* const _go, const int _x, const int _y) {
 		game_objects_.push_back(_go);
+		_go->getComponent<Components::Transform>()->pos_ = { _x, _y };
 	}
 
 	PlaySpace::~PlaySpace() {
 		game_objects_.clear();
 	}
 
-	TTTPS::TTTPS(const std::string _name)
-		: PlaySpace(_name) {}
 }

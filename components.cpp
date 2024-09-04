@@ -1,16 +1,16 @@
 module components;
 
 namespace GDE::Components {
-	const Position Transform::getPosition() const {
-		return pos_;
+	const Component::Signature Transform::getSignature() const {
+		return this->compSign_;
 	}
 
-	Position Transform::getPosition() {
-		return pos_;
+	const Component::Signature Transform::getSSignature() {
+		return Transform::compSign_;
 	}
 
-	void Transform::setPosition(const Position _pos) {
-		pos_ = _pos;
+	Transform::~Transform() {
+
 	}
 
 }

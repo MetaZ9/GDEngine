@@ -1,8 +1,7 @@
-#include <concepts>
-#include <map>
 export module gameplay;
 
-//import std;
+import <concepts>;
+import <map>;
 
 namespace GDE {
 	namespace Rule {
@@ -52,12 +51,14 @@ namespace GDE {
 		template <typename Derived>
 		BaseRule<Derived>::~BaseRule() {
 			for (auto& [k, v] : successors)
-				delete v;
+				v = nullptr;
+
+			successors.clear();
 		}
 
 		export template <typename B>
 		class InnerRule : public BaseRule<InnerRule<B>> {
-		private:
+		public:
 			B action;
 		public:
 			InnerRule(B);
@@ -92,7 +93,7 @@ namespace GDE {
 
 		}
 
-		template <typename B, typename... Args> requires std::invocable<B, Args...>
+		export template <typename B, typename... Args> requires std::invocable<B, Args...>
 		class OuterRule : public BaseRule<OuterRule<B, Args...>> {
 		public:
 			B action;
@@ -120,20 +121,6 @@ namespace GDE {
 		void OuterRule<B, Args...>::execute(Args&&... args) {
 			GPMessageType result = std::invoke(action, std::forward<Args>(args)...);
 		}
-
-	}
-
-}
-
-namespace GDE {
-	namespace GamePart {
-		export enum GPMessageType {
-			fail,
-			win,
-			draw,
-			nextTurn,
-			nothing
-		};
 
 	}
 
