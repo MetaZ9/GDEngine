@@ -99,8 +99,8 @@ namespace GDE::Core {
 		for (PlaySpaces::PlaySpace* ps : playspaces_)
 			delete ps;
 
-		for (Players::Player* ps : players_)
-			delete ps;
+		for (Players::Player* p : players_)
+			delete p;
 	}
 
 	Application::Application(const std::string _wnd_name, const HMODULE _instance) {

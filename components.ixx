@@ -7,7 +7,7 @@ namespace GDE {
 	namespace Components {
 		export class Transform : public Component {
 		private:
-			static constexpr Signature compSign_ = 0b1;
+			static constexpr Signature compSign_ = 0b01;
 
 		public:
 			Position pos_ = { 0, 0 };
@@ -32,6 +32,17 @@ namespace GDE {
 			static const Signature getSSignature();
 
 			~StateComp() override;
+		};
+
+		export class SpriteComp : public Component {
+		private:
+			static constexpr Signature compSign_ = 0b10;
+
+		public:
+			const Signature getSignature() const override;
+			static const Signature getSSignature();
+
+			~SpriteComp() override;
 		};
 
 	}

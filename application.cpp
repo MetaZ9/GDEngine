@@ -71,22 +71,22 @@ namespace GDE::OS::Windows {
 
 			//exit(EXIT_SUCCESS);
 			break;
-			/*
-							case WM_SIZE:
-								frame.width = LOWORD(_lParam);
-								frame.height = HIWORD(_lParam);
-							break;
-			*/
+		/*
+		case WM_SIZE:
+			frame.width = LOWORD(_lParam);
+			frame.height = HIWORD(_lParam);
+			break;
+		*/
 		case WM_KILLFOCUS:
 			Core::hasFocus = false;
 			memset(GDE::Input::keyboardState, 0, 256 * sizeof(GDE::Input::keyboardState[0]));
 			GDE::Input::clearInputs();
-			//					mouse.buttons = 0;
+			//mouse.buttons = 0;
 			break;
 		case WM_SETFOCUS:
 			Core::hasFocus = true;
-			break;
 
+			break;
 		case WM_SYSKEYDOWN:
 		case WM_SYSKEYUP:
 		case WM_KEYDOWN:
@@ -102,15 +102,15 @@ namespace GDE::OS::Windows {
 				if (keyIsDown && !keyWasDown)
 					GDE::Input::downKeys[(uint8_t)_wParam] = keyIsDown;
 				/*
-					if (keyIsDown) {
-						switch (_wParam) {
-							case VK_ESCAPE:
-								quit = true;
+				if (keyIsDown) {
+					switch (_wParam) {
+						case VK_ESCAPE:
+							quit = true;
 
-							break;
-						}
-
+						break;
 					}
+
+				}
 				*/
 
 				if (!keyIsDown && keyWasDown)
@@ -119,48 +119,48 @@ namespace GDE::OS::Windows {
 			}
 
 			break;
-			/*
-			case WM_MOUSEMOVE:
-				mouse.x = LOWORD(_lParam);
-				mouse.y = frame.h - 1 - HIWORD(_lParam);
-			break;
+		/*
+		case WM_MOUSEMOVE:
+			mouse.x = LOWORD(_lParam);
+			mouse.y = frame.h - 1 - HIWORD(_lParam);
+		break;
 
-			case WM_LBUTTONDOWN:
-				mouse.buttons |= MOUSE_LEFT;
-			break;
-			case WM_LBUTTONUP:
-				mouse.buttons &= ~MOUSE_LEFT;
-			break;
-			case WM_MBUTTONDOWN:
-				mouse.buttons |= MOUSE_MIDDLE;
-			break;
-			case WM_MBUTTONUP:
-				mouse.buttons &= ~MOUSE_MIDDLE;
-			break;
-			case WM_RBUTTONDOWN:
-				mouse.buttons |= MOUSE_RIGHT;
-			break;
-			case WM_RBUTTONUP:
-				mouse.buttons &= ~MOUSE_RIGHT;
-			break;
+		case WM_LBUTTONDOWN:
+			mouse.buttons |= MOUSE_LEFT;
+		break;
+		case WM_LBUTTONUP:
+			mouse.buttons &= ~MOUSE_LEFT;
+		break;
+		case WM_MBUTTONDOWN:
+			mouse.buttons |= MOUSE_MIDDLE;
+		break;
+		case WM_MBUTTONUP:
+			mouse.buttons &= ~MOUSE_MIDDLE;
+		break;
+		case WM_RBUTTONDOWN:
+			mouse.buttons |= MOUSE_RIGHT;
+		break;
+		case WM_RBUTTONUP:
+			mouse.buttons &= ~MOUSE_RIGHT;
+		break;
 
-			case WM_XBUTTONDOWN:
-				if (GET_XBUTTON_WPARAM(_wParam) == XBUTTON1)
-					mouse.buttons |= MOUSE_X1;
-				else
-					mouse.buttons |= MOUSE_X2;
-			break;
-			case WM_XBUTTONUP:
-				if (GET_XBUTTON_WPARAM(_wParam) == XBUTTON1)
-					mouse.buttons &= ~MOUSE_X1;
-				else
-					mouse.buttons &= ~MOUSE_X2;
-			break;
+		case WM_XBUTTONDOWN:
+			if (GET_XBUTTON_WPARAM(_wParam) == XBUTTON1)
+				mouse.buttons |= MOUSE_X1;
+			else
+				mouse.buttons |= MOUSE_X2;
+		break;
+		case WM_XBUTTONUP:
+			if (GET_XBUTTON_WPARAM(_wParam) == XBUTTON1)
+				mouse.buttons &= ~MOUSE_X1;
+			else
+				mouse.buttons &= ~MOUSE_X2;
+		break;
 
-			case WM_MOUSEWHEEL:
-				printf("%s\n", _wParam & 0b10000000000000000000000000000000 ? "Down" : "Up");
-			break;
-			*/
+		case WM_MOUSEWHEEL:
+			printf("%s\n", _wParam & 0b10000000000000000000000000000000 ? "Down" : "Up");
+		break;
+		*/
 		default:
 			return DefWindowProc(_wndHandle, _message, _wParam, _lParam);
 			break;
